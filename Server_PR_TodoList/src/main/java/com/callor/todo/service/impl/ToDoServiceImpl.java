@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.callor.todo.config.DBContract;
 import com.callor.todo.config.DBInfo;
-import com.callor.todo.model.ToDoDTO;
 import com.callor.todo.model.ToDoVO;
 import com.callor.todo.service.ToDoService;
 
@@ -21,26 +20,26 @@ public class ToDoServiceImpl implements ToDoService {
 		dbConn = DBContract.getDBConnection();
 	}
 	
-	public List<ToDoDTO> select(PreparedStatement pStr) throws SQLException {
+	public List<ToDoVO> select(PreparedStatement pStr) throws SQLException {
 		
-		List<ToDoDTO> tdList = new ArrayList<ToDoDTO>();
+		List<ToDoVO> tdList = new ArrayList<ToDoVO>();
 		
 		ResultSet rSet = pStr.executeQuery();
 		
 		while(rSet.next()) {
-			ToDoDTO dto = new ToDoDTO();
-			dto.setTd_seq(rSet.getLong(DBInfo.할일목록.td_seq));
-			dto.setTd_todo(rSet.getString(DBInfo.할일목록.td_todo));
-			dto.setTd_date(rSet.getString(DBInfo.할일목록.td_date));
-			dto.setTd_place(rSet.getString(DBInfo.할일목록.td_place));
-			tdList.add(dto);
+			ToDoVO vo = new ToDoVO();
+			vo.setTd_seq(rSet.getLong(DBInfo.할일목록.td_seq));
+			vo.setTd_todo(rSet.getString(DBInfo.할일목록.td_todo));
+			vo.setTd_date(rSet.getString(DBInfo.할일목록.td_date));
+			vo.setTd_place(rSet.getString(DBInfo.할일목록.td_place));
+			tdList.add(vo);
 		}
 		
 		return tdList;
 	}
 	
 	@Override
-	public List<ToDoDTO> selectAll() {
+	public List<ToDoVO> selectAll() {
 		// TODO 리스트 출력
 		String sql = " SELECT * FROM view_할일목록 ";
 		
@@ -48,8 +47,7 @@ public class ToDoServiceImpl implements ToDoService {
 		
 		try {
 			pStr = dbConn.prepareStatement(sql);
-			List<ToDoDTO> tdList = this.select(pStr);
-			
+			List<ToDoVO> tdList = this.select(pStr);
 			pStr.close();
 			return tdList;
 		} catch (SQLException e) {
@@ -61,7 +59,7 @@ public class ToDoServiceImpl implements ToDoService {
 	}
 	
 	@Override
-	public List<ToDoVO> findById(Long seq) {
+	public ToDoVO findById(Long seq) {
 		// TODO seq 번호로 찾기
 		String sql = " SELECT * FROM tbl_todo ";
 		sql += " WHERE td_seq = ? ";
@@ -71,12 +69,11 @@ public class ToDoServiceImpl implements ToDoService {
 		try {
 			pStr = dbConn.prepareStatement(sql);
 			pStr.setLong(1, seq);
-			pStr.executeUpdate();
-			
-			List<ToDoVO> list = new ArrayList<ToDoVO>();
-			
-			
+			List<ToDoVO> tdList = this.select(pStr);
 			pStr.close();
+			if(tdList != null && tdList.size() > 0) {
+				return tdList.get(0);
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -98,7 +95,7 @@ public class ToDoServiceImpl implements ToDoService {
 		sql += " td_time, ";
 		sql += " td_todo, ";
 		sql += " td_place)";
-		sql += " VALUE( seq_todo.NEXTVAL, ?, ?, ?, ? )";
+		sql += " VALUES( seq_todo.NEXTVAL, ?, ?, ?, ? )";
 		
 		PreparedStatement pStr = null;
 		try {
@@ -113,8 +110,6 @@ public class ToDoServiceImpl implements ToDoService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		
 		return null;
 	}

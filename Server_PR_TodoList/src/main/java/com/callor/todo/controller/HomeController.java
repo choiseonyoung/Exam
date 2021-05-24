@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.callor.todo.model.ToDoDTO;
+import com.callor.todo.model.ToDoVO;
 import com.callor.todo.service.ToDoService;
 import com.callor.todo.service.impl.ToDoServiceImpl;
 
@@ -28,12 +28,12 @@ public class HomeController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		List<ToDoDTO> toDoList = new ArrayList<ToDoDTO>();
+		List<ToDoVO> toDoList = new ArrayList<ToDoVO>();
 		toDoList = tdService.selectAll();
 		
 		req.setAttribute("TDLIST", toDoList);
 		
-		req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
+		RequestForwardController.forward(req, resp, "home");
 		
 	}
 	
