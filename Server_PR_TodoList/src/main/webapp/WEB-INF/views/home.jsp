@@ -6,8 +6,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<title>TO DO LIST</title>
+<link href="${rootPath}/static/css/home.css?ver2021-05-25-001" rel="stylesheet"/>
+
+<style>
+	
+	div.main {
+		width: 60%;
+		margin: auto;
+		padding-top: 20px;
+		padding-bottom: 60px;
+		padding-right: 50px;
+	}
+	
+	table tr#tr_hover:hover {
+		cursor: pointer;
+		background-color: #F4F4F4;
+	}
+	
+	div.main button {
+		float: right;
+	}
+	
+	
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 	document.querySelector("table").addEventListener("click",function(ev) {
@@ -22,39 +44,34 @@ document.addEventListener("DOMContentLoaded", function() {
 		let text = ev.target.textContent
 		// alert(text + " 클릭") // 테스트
 		
-		let url = "${rootPath}/todo"
-		
-		if(text == "추가") {
-			url += "/insert"
-		} else if(text == "수정") {
-			url += "/update"
-		} else if(text == "삭제") {
-			url += "/delete"
-		}
-		
-		document.location.href = url
+		document.location.href = "${rootPath}/todo/insert"
 		
 	})
 	
 })
 </script>
+</head>
 <body>
-	<h1> TO DO List </h1>
-	<button>추가</button>
-	<p>
+	<h1> &#127872; TO DO LIST &#127872; </h1>
+	<hr>
+	<div class="main">
+		<button class="btn_insert">추가</button>
+	</div>
 	<table>
 		<tr>
 			<th>No.</th>
 			<th>할일</th>
 			<th>작성일자</th>
 			<th>장소</th>
+			<th>check</th>
 		</tr>
 		<c:forEach items="${TDLIST}" var="TD" varStatus="index">
-		<tr data-seq="${TD.td_seq}">
+		<tr data-seq="${TD.td_seq}" id="tr_hover">
 			<td>${index.count}</td>
 			<td>${TD.td_todo}</td>
 			<td>${TD.td_date}</td>
 			<td>${TD.td_place}</td>
+			<td><input type=checkbox></td>
 		</tr>
 		</c:forEach>
 	</table>

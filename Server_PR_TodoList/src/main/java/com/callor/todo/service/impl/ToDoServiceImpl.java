@@ -28,10 +28,11 @@ public class ToDoServiceImpl implements ToDoService {
 		
 		while(rSet.next()) {
 			ToDoVO vo = new ToDoVO();
-			vo.setTd_seq(rSet.getLong(DBInfo.할일목록.td_seq));
-			vo.setTd_todo(rSet.getString(DBInfo.할일목록.td_todo));
-			vo.setTd_date(rSet.getString(DBInfo.할일목록.td_date));
-			vo.setTd_place(rSet.getString(DBInfo.할일목록.td_place));
+			vo.setTd_seq(rSet.getLong(DBInfo.td_seq));
+			vo.setTd_todo(rSet.getString(DBInfo.td_todo));
+			vo.setTd_date(rSet.getString(DBInfo.td_date));
+			vo.setTd_time(rSet.getString(DBInfo.td_time));
+			vo.setTd_place(rSet.getString(DBInfo.td_place));
 			tdList.add(vo);
 		}
 		
@@ -41,7 +42,7 @@ public class ToDoServiceImpl implements ToDoService {
 	@Override
 	public List<ToDoVO> selectAll() {
 		// TODO 리스트 출력
-		String sql = " SELECT * FROM view_할일목록 ";
+		String sql = " SELECT * FROM tbl_todo ";
 		
 		PreparedStatement pStr = null;
 		
@@ -132,7 +133,12 @@ public class ToDoServiceImpl implements ToDoService {
 			pStr.setString(1, tdVO.getTd_date());
 			pStr.setString(2, tdVO.getTd_time());
 			pStr.setString(3, tdVO.getTd_todo());
+			
 			pStr.setString(4, tdVO.getTd_place());
+			
+			pStr.setLong(5, tdVO.getTd_seq());
+			
+			// System.out.println(tdVO.getTd_seq()); // 테스트
 			
 			return pStr.executeUpdate();
 		} catch (SQLException e) {

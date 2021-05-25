@@ -34,6 +34,7 @@ public class TodoController extends HttpServlet {
 			String strSeq = req.getParameter("td_seq");
 			Long td_seq = Long.valueOf(strSeq);
 			ToDoVO tdVO = tdService.findById(td_seq);
+			// System.out.println(tdVO.getTd_time()); // 테스트
 
 			req.setAttribute("TD", tdVO);
 			RequestForwardController.forward(req, resp, "select");
@@ -94,12 +95,13 @@ public class TodoController extends HttpServlet {
 		if(subPath.equals("/insert")) {
 			tdService.insert(vo);
 			resp.sendRedirect("/todo/");
+			
 		} else if(subPath.equals("/update")) {
 			String strSeq = req.getParameter("td_seq");
 			Long td_seq = Long.valueOf(strSeq);
-			ToDoVO tdVO = tdService.findById(td_seq);
+			vo.setTd_seq(td_seq);
 			
-			tdService.update(tdVO);
+			tdService.update(vo);
 			
 			resp.sendRedirect("/todo/");
 			
